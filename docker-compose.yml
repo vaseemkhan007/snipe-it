@@ -1,0 +1,45 @@
+version: '3'
+services:
+  snipe_db:
+    image: mysql:5.6
+    container_name: snipe-mysql
+    restart: always
+
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=snipeit
+      - MYSQL_USER=snipeit
+      - MYSQL_PASSWORD=xxxx
+    volumes:
+      - /disk2/docker_data/snipesql:/var/lib/mysql 
+
+  snipe_it:
+    image: snipe/snipe-it:latest
+    container_name: snipe-it
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      - DB_CONNECTION=mysql
+      - DB_HOST=snipe_db
+      - DB_DATABASE=snipeit
+      - DB_USERNAME=snipeit
+      - DB_PASSWORD=xxxx
+      - MAIL_PORT_587_TCP_ADDR=
+      - MAIL_PORT_587_TCP_PORT=587
+      - MAIL_ENV_FROM_ADDR=
+      - MAIL_ENV_FROM_NAME=XXX Asset
+      - MAIL_ENV_ENCRYPTION=tls
+      - MAIL_ENV_USERNAME=xxx
+      - MAIL_ENV_PASSWORD=
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_KEY=base64:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      - APP_URL=http://asset.domain.org
+      - APP_TIMEZONE=US/Pacific
+      - APP_LOCALE=en
+    volumes:
+      - /disk2/docker_data/snipeit:/var/lib/snipeit  
+    links: 
+      - snipe_db:snipe-db
+  
